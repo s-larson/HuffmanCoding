@@ -10,27 +10,13 @@ using namespace std;
 
 
 class Tree {
-	struct TreeWrapper {
-		TreeWrapper() {
-			tree = NULL;
-		}
 
-		TreeWrapper(Tree* t) {
-			tree = t;
-		}
-
-		bool operator<(const TreeWrapper &tw) const {
-			return tree->getWeight() > tw.tree->getWeight();
-		}
-
-		Tree* tree;
-	};
 public:
 	Tree(int w, char c);
 	Tree(int w, Tree* t1, Tree* t2);
 	~Tree();
 	int getWeight() const;
-	void printTree(priority_queue<TreeWrapper> tree) const;
+	void printTree(vector<char>& bitString, vector<char>& input) const;
 	char getChar() const;
 private:
 	Tree* left;

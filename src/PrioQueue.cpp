@@ -23,6 +23,7 @@ Tree::Tree(int w, char c) {
 	left = NULL;
 	right = NULL;
 }
+
 Tree::Tree(int w, Tree* t1, Tree* t2) {
 	left = t1;
 	right = t2;
@@ -38,21 +39,50 @@ char Tree::getChar() const {
 	return this->c;
 }
 
-void Tree::printTree(priority_queue<TreeWrapper> tree) const {
-	cout << tree.top().tree->getWeight();
+void Tree::printTree(vector<char>& bitString, vector<char>& input) const {
+
+	if(!input.empty()) {
+		vector<char> temp = input;
+		// True if current node is leaf
+		if(this->left && this->right == NULL) {
+			// Check if leaf node is the letter we're searching for
+			if(temp.front() == this->c) {
+				// Node found! Remove front letter and call printTree for next character
+				temp.erase(temp.begin());
+				printTree(bitString, temp);
+			}
+
+		// Add 1 to bitString if left child exists
+		} else if (this->left != NULL) {
+			bitString.push_back(1);
+			this->left->printTree(bitString, temp);
+
+		// Add 0 to bitString if right child exists
+		} else if (this->right != NULL) {
+			bitString.push_back(0);
+			this->right->printTree(bitString, temp);
+		}
+		//
+	} else {
+		for (vector<char>::iterator it = bitString.begin(); it != bitString.end(); ++it) {
+			cout << *it;
+		}
+	}
 }
 
-priority_queue<TreeWrapper> createTree(unsigned char input[]) {
+//priority_queue<TreeWrapper> createTree(unsigned char input[]) {
+TreeWrapper createTree(vector<char>& input) {
 
 	priority_queue<TreeWrapper> q;
 
 	// Count character occurance and save in array 'count'
-	int count[256] = {0};
+	int count[input.size()] = {0};
 	for(int i = 0; input[i] != '\0'; i++) {
 		count[input[i]]++;
 	}
+
 	// Create tree for each character and insert in priority queue
-	for(int i = 0; i < sizeof(count); i++){
+	for(int i = 0; i < sizeof(count); i++) {
 		if(count[i] > 0) q.push(TreeWrapper(new Tree(count[i], input[i])));
 	}
 
@@ -70,27 +100,27 @@ priority_queue<TreeWrapper> createTree(unsigned char input[]) {
 	}
 
 	//Return remaining tree in prio queue
-	return q;
+	cout << q.top().tree->getWeight();
+	return q.top();
 }
 
 int main() {
 
-	unsigned char input[] = "aabc";
+	vector<char> input;
+	input.push_back('a');
+	input.push_back('b');
+	input.push_back('b');
+	input.push_back('a');
+	input.push_back('c');
 
-	priority_queue<TreeWrapper> result = createTree(input);
-
-	result.top().tree->printTree(result);
-
-
+	TreeWrapper t = createTree(input);
+	cout << "create yes very nice";
+	vector<char> bitString = {};
+	t.tree->printTree(bitString, input);
+	cout << "print yes very nice";
 	return 0;
 }
 
 /*
  * Problem:
- * - createTree och printTree tar emot felaktiga(?) parametrar. Vad exakt ska matas in/ut ur funktionerna?
- * Idéer: flytta så mkt som möjligt till Tree klassen och håll queuen lokalt
- *
- * To-do:
- * -ta bort struct ur Tree klassen
- * -skapa print funktionen - encoda trädet med 0 = vänster, 1 = höger
  */
