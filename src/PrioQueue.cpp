@@ -41,6 +41,8 @@ char Tree::getChar() const {
 
 void Tree::printTree(vector<char>& bitString, vector<char>& input) const {
 
+	// Make sure it's breadth first.
+
 	if(!input.empty()) {
 		vector<char> temp = input;
 		// True if current node is leaf
@@ -62,7 +64,6 @@ void Tree::printTree(vector<char>& bitString, vector<char>& input) const {
 			bitString.push_back(0);
 			this->right->printTree(bitString, temp);
 		}
-		//
 	} else {
 		for (vector<char>::iterator it = bitString.begin(); it != bitString.end(); ++it) {
 			cout << *it;
@@ -73,17 +74,31 @@ void Tree::printTree(vector<char>& bitString, vector<char>& input) const {
 //priority_queue<TreeWrapper> createTree(unsigned char input[]) {
 TreeWrapper createTree(vector<char>& input) {
 
+	cout << "create trrääääd";
+
 	priority_queue<TreeWrapper> q;
 
-	// Count character occurance and save in array 'count'
-	int count[input.size()] = {0};
+	// Count character occurance and save in array 'count'. Size 256 to fit all possible characters
+	int count[256] = {0};
+	//vector<char>& charCount = input;
+
 	for(int i = 0; input[i] != '\0'; i++) {
-		count[input[i]]++;
+		unsigned char c = input[i];
+		count[c]++;
+		//cout << "occ: "<< count[input[i]] << endl;
+		//cout << "input: "<< input[i] << endl;
 	}
 
 	// Create tree for each character and insert in priority queue
-	for(int i = 0; i < sizeof(count); i++) {
-		if(count[i] > 0) q.push(TreeWrapper(new Tree(count[i], input[i])));
+	for(unsigned int i = 0; i < sizeof(count)/sizeof(count[0]); i++) {
+		cout << count[i];
+		if(count[i] > 0) {
+			cout << "hej";
+			q.push(TreeWrapper(new Tree(count[i], input[i])));
+		} else {
+			cout << "wtf";
+		}
+		cout << q.top().tree->getChar() << q.top().tree->getWeight() << endl;
 	}
 
 	while(q.size() > 1 ){
@@ -106,12 +121,16 @@ TreeWrapper createTree(vector<char>& input) {
 
 int main() {
 
+	cout << "ÄRU DUM ELLR";
+
 	vector<char> input;
 	input.push_back('a');
 	input.push_back('b');
 	input.push_back('b');
 	input.push_back('a');
-	input.push_back('c');
+	input.push_back('m');
+
+	cout << "HALLÅ";
 
 	TreeWrapper t = createTree(input);
 	cout << "create yes very nice";
