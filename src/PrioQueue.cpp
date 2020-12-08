@@ -43,51 +43,68 @@ void Tree::printTree(vector<char>& bitString, vector<char>& input) const {
 
 	// Make sure it's breadth first.
 
+	cout << "current node: " << this->getChar() << endl;
+	if(this->left != NULL) {
+		cout << "left node: " << this->left->getChar() << endl;
+		cout << "left weight: " << this->left->getWeight() << endl;
+		this->left->printTree(bitString, input);
+	}
+	if(this->right != NULL) {
+		cout << "right node: " << this->right->getChar() << endl;
+		cout << "right weight: " << this->right->getWeight() << endl;
+		this->right->printTree(bitString, input);
+	}
+
+
+
+
+
+
+/*
 	if(!input.empty()) {
 		vector<char> temp = input;
+
 		// True if current node is leaf
 		if(this->left == NULL && this->right == NULL) {
 			// Check if leaf node is the letter we're searching for
 			if(temp.front() == this->c) {
 				// Node found! Remove front letter and call printTree for next character
 				temp.erase(temp.begin());
+				for (char x : bitString) {
+					cout << x << endl;
+				}
 				printTree(bitString, temp);
 			}
+		}
 
 		// Add 1 to bitString if left child exists
-		} else if (this->left != NULL) {
+		if (this->left != NULL) {
+			cout << "going left..." << endl;
 			bitString.push_back(1);
 			this->left->printTree(bitString, temp);
-
+		}
 		// Add 0 to bitString if right child exists
-		} else if (this->right != NULL) {
+		if (this->right != NULL) {
+			cout << "going right..." << endl;
 			bitString.push_back(0);
 			this->right->printTree(bitString, temp);
 		}
 	} else {
-		for (vector<char>::iterator it = bitString.begin(); it != bitString.end(); ++it) {
-			cout << *it;
+		//for (vector<char>::iterator it = bitString.begin(); it != bitString.end(); ++it) {
+		for (char out : bitString) {
+			//cout << *it;
+			cout << out << endl;
+
 		}
-	}
+		cout << "heureka! " << endl;
+	}*/
 }
 
 TreeWrapper createTree(vector<char>& input) {
 
-	// Idea:
-	// New vector with used elements? Create tree as you count
-	// Count whole input vector, then move to next element
-
-
 	vector<char> usedElements;
 	priority_queue<TreeWrapper> q;
 
-	// 1. Sök igenom input strängen. Använd en counter
-	// 2. Spara bokstaven i usedElements
-	// 3. Skapa träd med bokstaven + count
-	// 4. Ta nästa bokstav (om den inte finns i usedElements)
-
-	//for (auto it = begin(input); it != end(input); ++it) {
-	//for (char c : input) {
 	for (unsigned int i = 0; i < input.size(); i++) {
 
 		char c = input[i];
@@ -106,23 +123,16 @@ TreeWrapper createTree(vector<char>& input) {
 			// Create tree for each letter
 			q.push(TreeWrapper(new Tree(counter, c)));
 		}
-
 	}
-
-
 
 	while(q.size() > 1 ){
 
 		// Pick the top 2 elements (retrieve and remove) and create a new tree with weight ele1 + ele2
-		Tree *temp1 = new Tree(q.top().tree->getChar(), q.top().tree->getWeight());
-		cout << q.top().tree->getChar() << q.top().tree->getWeight() << endl;
+		Tree *temp1 = new Tree(q.top().tree->getWeight(), q.top().tree->getChar());
 		q.pop();
-		Tree *temp2 = new Tree(q.top().tree->getChar(), q.top().tree->getWeight());
-		cout << q.top().tree->getChar() << q.top().tree->getWeight() << endl;
+		Tree *temp2 = new Tree(q.top().tree->getWeight(), q.top().tree->getChar());
 		q.pop();
-		int weightSum = temp1->getWeight();
-
-		cout << weightSum << "asd" << endl;
+		int weightSum = temp1->getWeight() + temp2->getWeight();
 
 		// Put new tree in prio queue
 		q.push(TreeWrapper(new Tree(weightSum, temp1, temp2)));
@@ -146,7 +156,7 @@ int main() {
 
 	TreeWrapper t = createTree(input);
 	vector<char> bitString = {};
-//	t.tree->printTree(bitString, input);
+	t.tree->printTree(bitString, input);
 	cout << "MAIN END" << endl;
 	return 0;
 }
