@@ -61,6 +61,9 @@ void Tree::printTree(vector<char>& bitString, vector<char>& input) const {
 		cout << "right weight: " << this->right->getWeight() << endl;
 		this->right->printTree(bitString, input);
 	}
+	else if(this->right == NULL && this->left == NULL) {
+		cout << this->weight << " childs are null!" << endl;
+	}
 
 
 
@@ -146,13 +149,7 @@ TreeWrapper createTree(vector<char>& input) {
 	}
 
 	//Return remaining tree in prio queue
-	cout << "test L: " << q.top().tree->getLeftChildWeight() << endl;
-	cout << "test R: " << q.top().tree->getRightChildWeight() << endl;
 	cout << "Weight of top: " << q.top().tree->getWeight() << endl;
-	cout << "left from top: " << q.top().tree->left->getChar() << endl;
-	cout << "right from top: " << q.top().tree->right->getWeight() << endl;
-	//cout << "left child : " << q.top().tree->right->getLeftChildWeight() << endl;
-	//cout << "right child : " << q.top().tree->right->getRightChildWeight() << endl;
 	return q.top();
 }
 
