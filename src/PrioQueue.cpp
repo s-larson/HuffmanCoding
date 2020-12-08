@@ -31,6 +31,13 @@ Tree::Tree(int w, Tree* t1, Tree* t2) {
 	c = NULL;
 }
 
+int Tree::getLeftChildWeight() {
+	return left->getWeight();
+}
+int Tree::getRightChildWeight() {
+	return right->getWeight();
+}
+
 int Tree::getWeight() const {
 	return this->weight;
 }
@@ -139,7 +146,13 @@ TreeWrapper createTree(vector<char>& input) {
 	}
 
 	//Return remaining tree in prio queue
+	cout << "test L: " << q.top().tree->getLeftChildWeight() << endl;
+	cout << "test R: " << q.top().tree->getRightChildWeight() << endl;
 	cout << "Weight of top: " << q.top().tree->getWeight() << endl;
+	cout << "left from top: " << q.top().tree->left->getChar() << endl;
+	cout << "right from top: " << q.top().tree->right->getWeight() << endl;
+	//cout << "left child : " << q.top().tree->right->getLeftChildWeight() << endl;
+	//cout << "right child : " << q.top().tree->right->getRightChildWeight() << endl;
 	return q.top();
 }
 

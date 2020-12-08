@@ -20,7 +20,9 @@ public:
 	int getWeight() const;
 	void printTree(vector<char>& bitString, vector<char>& input) const;
 	char getChar() const;
-private:
+	int getRightChildWeight();
+	int getLeftChildWeight();
+//private:
 	Tree* left;
 	Tree* right;
 	int weight;
