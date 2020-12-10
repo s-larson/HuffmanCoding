@@ -22,6 +22,7 @@ Tree::Tree(int w, char c) {
 	this->c = c;
 	this->left = NULL;
 	this->right = NULL;
+	this->parent = NULL;
 }
 
 Tree::Tree(int w, Tree* t1, Tree* t2) {
@@ -29,6 +30,7 @@ Tree::Tree(int w, Tree* t1, Tree* t2) {
 	this->right = t2;
 	this->weight = w;
 	this->c = NULL;
+	this->parent = NULL;
 }
 
 int Tree::getLeftChildWeight() {
@@ -46,10 +48,62 @@ char Tree::getChar() const {
 	return this->c;
 }
 
-void Tree::printTree(vector<string>& bitString, vector<char>& input) const {
+void Tree::setParent(Tree* t) {
+	this->parent = t;
+}
 
-	// Make sure it's breadth first !!!!!!!
+void Tree::printTree(vector<char>& bitString, vector<char>& input, Tree* root) const {
 
+	/*
+	 * metod för att returnera 0/1
+	 * vector.push_back (function) // if(function)... == 1, push_back 1.
+	 * --- Hur returneras alla nivåer?'
+	 * PRINT AS YOU GO!
+	 *
+	 * Make sure it's breadth first !!!!!!!
+	 */
+
+	bool found = false;
+	vector<char> temp = input;
+
+	cout << "node " << this->c << " parent is " << this->parent->weight << endl;
+
+	while(!temp.empty()) {
+
+		if(found) {
+			temp.erase(temp.begin());
+			found = false;
+		}
+
+
+
+		if(this->left != NULL) {
+			bitString.push_back('1');
+			this->left->printTree(bitString, temp, root);
+		}
+
+		if(this->right != NULL) {
+			bitString.push_back('0');
+			this->right->printTree(bitString, temp, root);
+		}
+
+		if(this->right == NULL && this->left == NULL) {
+			// Character found!
+			if(temp.front() == this->c) {
+
+				// Print out bitString
+				for(char c : bitString) {
+					cout << c;
+				}
+
+				found = true;
+			}
+		}
+		if(this->parent != NULL) break;
+		cout << "stuck on node " << this->c << endl;
+	}
+
+/*
 	if(!input.empty()) {
 		vector<char> temp = input;
 
@@ -58,34 +112,31 @@ void Tree::printTree(vector<string>& bitString, vector<char>& input) const {
 			// Check if leaf node is the letter we're searching for
 			if(temp.front() == this->c) {
 				// Node found! Remove front letter and call printTree for next character
+				cout << "node"<< this->c << "found!" << endl;
 				temp.erase(temp.begin());
-				cout << temp.size() << endl;
-				printTree(bitString, temp);
+				root->printTree(bitString, temp, root);
 			}
 		}
 
 		// Add 1 to bitString if left child exists
 		if (this->left != NULL) {
-			cout << "going left..." << endl;
-			bitString.push_back("1");
-			cout << bitString.front() << endl;
-			this->left->printTree(bitString, temp);
+			cout << "going left with node " << this->c << endl;
+			bitString.push_back('1');
+			this->left->printTree(bitString, temp, root);
 		}
 		// Add 0 to bitString if right child exists
 		if (this->right != NULL) {
 			cout << "going right..." << endl;
-			bitString.push_back("0");
-			this->right->printTree(bitString, temp);
+			bitString.push_back('0');
+			this->right->printTree(bitString, temp, root);
 		}
 	} else {
-		//for (vector<char>::iterator it = bitString.begin(); it != bitString.end(); ++it) {
-		for (string out : bitString) {
-			//cout << *it;
+		for (char out : bitString) {
+
 			cout << out << endl;
 
 		}
-		cout << "heureka! " << endl;
-	}
+	}*/
 }
 
 TreeWrapper createTree(vector<char>& input) {
@@ -123,7 +174,12 @@ TreeWrapper createTree(vector<char>& input) {
 			int weightSum = temp1->getWeight() + temp2->getWeight();
 
 			// Put new tree in prio queue
-			q.push(TreeWrapper(new Tree(weightSum, temp1, temp2)));
+			TreeWrapper parent = new Tree(weightSum, temp1, temp2);
+			q.push(parent);
+			//q.push(TreeWrapper(new Tree(weightSum, temp1, temp2)));
+			temp1->setParent(parent.tree);
+			temp2->setParent(parent.tree);
+			cout << parent.tree->getWeight();
 		}
 
 
@@ -143,8 +199,8 @@ int main() {
 	input.push_back('c');
 
 	TreeWrapper t = createTree(input);
-	vector<string> bitString = {};
-	t.tree->printTree(bitString, input);
+	vector<char> bitString = {};
+	t.tree->printTree(bitString, input, t.tree);
 
 	cout << "MAIN END" << endl;
 	return 0;

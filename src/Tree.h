@@ -18,13 +18,15 @@ public:
 	Tree(int w, Tree* t1, Tree* t2);
 	~Tree();
 	int getWeight() const;
-	void printTree(vector<string>& bitString, vector<char>& input) const;
+	void printTree(vector<char>& bitString, vector<char>& input, Tree* root) const;
 	char getChar() const;
 	int getRightChildWeight();
 	int getLeftChildWeight();
+	void setParent(Tree* t);
 //private:
 	Tree* left;
 	Tree* right;
+	Tree* parent;
 	int weight;
 	char c;
 };
