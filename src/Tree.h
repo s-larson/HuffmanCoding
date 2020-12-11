@@ -18,12 +18,9 @@ public:
 	Tree(int w, Tree* t1, Tree* t2);
 	~Tree();
 	int getWeight() const;
-	void printTree(vector<char>& bitString, vector<char>& input, Tree* root) const;
+	void printTree(vector<char>& bitString) const;
 	char getChar() const;
-	int getRightChildWeight();
-	int getLeftChildWeight();
-	void setParent(Tree* t);
-//private:
+private:
 	Tree* left;
 	Tree* right;
 	Tree* parent;
