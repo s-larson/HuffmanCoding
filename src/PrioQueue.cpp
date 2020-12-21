@@ -77,13 +77,12 @@ TreeWrapper createTree(vector<char>& input) {
 	for (unsigned int i = 0; i < input.size(); i++) {
 
 		char c = input[i];
+		int counter = 1;
 
 		// Only start counting if the character has not been already counted
 		if(!(find(usedElements.begin(), usedElements.end(), c) != usedElements.end())) {
 
-			int counter = 1;
-
-			// Search through the rest of the input string
+			// Search through the rest of the input string (from current + 1 -> last)
 			for (unsigned int j = i+1; j < input.size(); j++) {
 				char d = input[j];
 				if (d == c) counter++;
@@ -123,7 +122,6 @@ int main() {
 	input.push_back('a');
 	input.push_back('c');
 	input.push_back('k');
-	input.push_back('p');
 	input.push_back('p');
 
 	// Create tree structure and print content
